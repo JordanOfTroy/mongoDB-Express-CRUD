@@ -43,7 +43,7 @@ app.post('/newUser', async (req, res) => {
         res.send(`done ${aUser}`);
     } catch (err) {
         console.error(err);
-        res.send(`error: ${err}`);
+        res.send(`Oops! Create Error: ${err}`);
     }
  });
 
@@ -57,7 +57,7 @@ app.post('/newUser', async (req, res) => {
         console.log(`found user: ${foundUser}`)
         res.send(`username: ${foundUser.name} - userAge: ${foundUser.age}`)
     } catch (err) {
-        console.log(`Oops! ${err}`)
+        console.log(`Oops! Read Error: ${err}`)
         res.send(`error:${err}`)
     }
  });
@@ -82,7 +82,7 @@ app.post('/newUser', async (req, res) => {
         res.send(returnMsg);
 
     } catch (err) {
-        if (err) return console.log(`Oops! ${err}`);
+        if (err) return console.log(`Oops! Update Error: ${err}`);
     }
  });
 
