@@ -29,7 +29,8 @@ db.once('open', function () {
    console.log('db connected');
 });
 
-
+//CREATE
+// test this with` curl --data "name=Peter&role=Student&age=30" http://localhost:8080/newUser '
 app.post('/newUser', async (req, res) => {
     console.log(`POST /newUser: ${JSON.stringify(req.body)}`);
     const newUser = new user();
@@ -46,11 +47,65 @@ app.post('/newUser', async (req, res) => {
     }
  });
 
+ //READ
+ // test this with` curl http://localhost:8080/user/Jordan '
+ app.get('/user/:name', async (req, res) => {
+    console.log(`GET /user/:name: ${JSON.stringify(req.params)}`);
+    let userName = req.params.name;
+    try {
+        let foundUser = await user.findOne({ name: userName });
+        console.log(`found user: ${foundUser}`)
+        res.send(`username: ${foundUser.name} - userAge: ${foundUser.age}`)
+    } catch (err) {
+        console.log(`Oops! ${err}`)
+        res.send(`error:${err}`)
+    }
+ });
+ 
+
+ //UPDATE
+ // test using ' curl --data "name=Jordan&role=TA" http://localhost:8080/updateUserRole '
+ app.post('/updateUserRole', async (req, res) => {
+    console.log(`POST /updateUserRole: ${JSON.stringify(req.body)}`);
+    let matchedName = req.body.name;
+    let newrole = req.body.role;
+    console.log(matchedName);
+    try {
+        let data = await user.findOneAndUpdate( {name: matchedName}, {role: newrole},
+            { new: true }); //return the updated version instead of the pre-updated document
+        let returnMsg = 'Not Found\n'
+        if(data) {
+            console.log(`data -- ${data.role}`)
+            returnMsg = `user name : ${matchedName} New role : ${data.role}`;
+            console.log(returnMsg);
+        }
+        res.send(returnMsg);
+
+    } catch (err) {
+        if (err) return console.log(`Oops! ${err}`);
+    }
+ });
+
+ //DELETE
+ // test using ' curl --data "name=Peter" http://localhost:8080/removeUser '
+ app.post('/removeUser', async (req, res) => {
+    console.log(`POST /removeUser: ${JSON.stringify(req.body)}`);
+    let matchedName = req.body.name;
+    try {
+        let userToDelete = await user.findOneAndDelete({ name: matchedName })
+        let returnMsg = `user name : ${matchedName} has been removed`
+        console.log(returnMsg);
+        res.send(returnMsg);
+    } catch (err) {
+        console.log(`Oops! Delete Error: ${err}`)
+    }
+ });
+ 
+
 
 app.listen(port, (err) => {
    if (err) console.log(err);
    console.log(`App Server listen on port: ${port}`);
 });
 
-// test this with`curl --data "name=Peter&role=Student&age=30" http://localhost:8080/newUser`
 
