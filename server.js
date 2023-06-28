@@ -4,6 +4,7 @@ const app = express();
 const port = process.env.PORT || 8080;
 const db = mongoose.connection;
 const {Schema} = mongoose
+const connectionString = process.env.CONNECTION_STRING || 'mongodb://localhost/myFirstMDB'
 
 //Schema example https://mongoosejs.com/docs/guide.html
 const userSchema = new Schema({
@@ -23,10 +24,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-mongoose.connect('mongodb://localhost/myFirstMDB', {useNewUrlParser: true}); // "myFirstMDB" is the db name
+mongoose.connect(connectionString); // "myFirstMDB" is the db name
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-   console.log('db connected');
+   console.log(`db connected on: ${connectionString}`);
 });
 
 //CREATE
