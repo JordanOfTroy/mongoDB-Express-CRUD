@@ -22,7 +22,7 @@ const user = mongoose.model('user', userSchema)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.static('public'))
 
 mongoose.connect(connectionString); // "myFirstMDB" is the db name
 db.on('error', console.error.bind(console, 'connection error:'));
